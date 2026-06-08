@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Blocks and Beds Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // URL to your GeoJSON file on GitHub
+    const geojsonUrl = "https://raw.githubusercontent.com/rhowitt/KMLtest/main/BlocksAndBedsV4.geojson";
+
+    // Create the map
+    const map = L.map('map').setView([43.2, -77.5], 12);
+
+    // Add a basemap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Load your GeoJSON
+    fetch(geojsonUrl)
+      .then(response => response.json())
+      .then(data => {
+        const layer = L.geoJSON(data).addTo(map);
+        map.fitBounds(layer.getBounds());
+      })
+      .catch(err => console.error("Error loading GeoJSON:", err));
+  </script>
+</body>
+</html>
